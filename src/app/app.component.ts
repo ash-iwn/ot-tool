@@ -1,12 +1,11 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule],
+  imports: [FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -23,6 +22,7 @@ export class AppComponent implements OnInit {
   canvas: ElementRef = {} as ElementRef;
 
   context: CanvasRenderingContext2D = {} as CanvasRenderingContext2D;
+  data: any;
 
   
 
@@ -70,21 +70,12 @@ export class AppComponent implements OnInit {
 
   getWebPageData() {
 
-    let data = this.http.get('http://localhost:3200/getData').subscribe( {
-      next: (data) => {
-        console.log(data);
+    let response = this.http.get('http://localhost:3200/getData').subscribe(val => {
+      console.log('val', val);
+      this.data = val;
 
-      },
-      error: (error) => {
-        console.log('server', error)
-      },
-
-      complete: () => {
-        console.log('complete');
-      }
-    
     });
-    console.log(data);
+
 
   }
 

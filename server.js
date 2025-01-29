@@ -105,7 +105,7 @@ const webscraping = async pageUrl => {
         console.log(e);
     }
 
-    console.log(dataObj);
+    return dataObj;
 
     browser.close();
 }
@@ -134,11 +134,10 @@ app.use((req, res, next) => {
 });
 
 
-app.use('/getData', router.get('/', async (req, res, next) => {
-    let data = await webscraping(pageUrl);
-    res.json(data);
-    next();
- }));
+app.get('/getData', async (req, res) => {
+    const data = await webscraping(pageUrl);
+    return res.json(data);
+ });
 
 
 const port = process.env.PORT || 3200; // You can use environment variables for port configuration
