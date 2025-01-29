@@ -2,10 +2,16 @@ import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core'
 import { DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
+
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -22,11 +28,14 @@ export class AppComponent implements OnInit {
   canvas: ElementRef = {} as ElementRef;
 
   context: CanvasRenderingContext2D = {} as CanvasRenderingContext2D;
-  data: any;
+  data: any = [];
+
+  sanitizedBlobUrl: SafeUrl = '';
+  filename: string = '';
 
   
 
-  constructor( @Inject(DOCUMENT) private document: Document, private http:HttpClient) {
+  constructor( @Inject(DOCUMENT) private document: Document, private http:HttpClient,  private sanitizer: DomSanitizer) {
 
   }
 
@@ -50,36 +59,20 @@ export class AppComponent implements OnInit {
 
     this.context.fill(path);
 
-    //canvas.width = parseInt(Number(this.tbase) * 50);
-    // canvas.height = parseInt(height.value * 50);
-
-    // if (canvas.getContext) {
-    //     const ctx = canvas.getContext('2d');
-
-    //     const sWidth = canvas.width;
-    //     const sHeight = canvas.height;
-    //     const path=new Path2D(); // origin is at the top left corner of the canvas
-    //     path.moveTo(0, sHeight);// bottom left corner
-    //     path.lineTo(sWidth/2, 0); // top middle of canvas
-    //     path.lineTo(sWidth,sHeight); // bottom right corner
-    
-    //     ctx.fill(path);
-    // }
   }
 
 
   getWebPageData() {
+    this.data = [];
 
-    let response = this.http.get('http://localhost:3200/getData').subscribe(val => {
-      console.log('val', val);
+    this.http.get('http://localhost:3200/getData').subscribe(val => {
+      
       this.data = val;
+      const blob = new Blob([JSON.stringify(this.data, null, 2)], {type: 'application/json'});
+      const blobUrl = window.URL.createObjectURL(blob);
+      window.open(blobUrl)
 
     });
-
-
   }
-
- 
-
 }
 

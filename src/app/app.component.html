@@ -1,17 +1,27 @@
 
 <section>
   <h1>Q1 - Create a triangle of M x N dimensions </h1>
+  <p>The dimensions are multiplied by a factor of 50 to increase visibility</p>
  
   
   <div>
-      <label>base</label>
-      <input type="text" id="tbase" placeholder="Enter a value for base" [(ngModel)]="tbase" autocomplete="off">
-  
-      <label>height</label>
-      <input type="text" id = "theight" placeholder="Enter a value for height" [(ngModel)]="theight" autocomplete="off">
+      <div>
+        <label>base</label>
+        <input type="text" id="tbase" placeholder="Enter a value for base" [(ngModel)]="tbase" autocomplete="off">
+      </div>
+     
+
+      <div>
+        <label>height</label>
+        <input type="text" id = "theight" placeholder="Enter a value for height" [(ngModel)]="theight" autocomplete="off">
+      </div>
+      
+      <br>
   
       <button (click)="draw()">Draw triangle</button>
   </div>
+
+  <br>
 
   <div>
     <canvas [style.height]="canvasHeight" [style.width]="canvasWidth" #myCanvas>
@@ -24,5 +34,5 @@
 <section>
   <h1>Q2 - Scrape product information from microfocus page in JSON  https://www.microfocus.com/en-us/products?trial=true. </h1>
 
-  <button (click)="getWebPageData()">Get Data</button>
+  <button type="button" (click)="getWebPageData()">Get Product Data</button>
 </section>
