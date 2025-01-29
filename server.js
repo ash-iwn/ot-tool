@@ -6,7 +6,7 @@ const app = express();
 
 const router = express.Router();
 
-const pageUrl = "https://www.microfocus.com/en-us/products?trial=true";
+const pageUrl = "https://www.microfocus.com/fr-fr/products?trial=true";
 
 
 /*
@@ -24,12 +24,16 @@ const webscraping = async pageUrl => {
 
     let dataObj = {};
     try {
-        await page.goto(pageUrl);
- 
-        await page.waitForSelector( () => document.querySelectorAll('button[class="contactIcon"] > img')
+        await page.goto(pageUrl,
+            {waitUntil : "domcontentloaded"}
         );
 
-        console.log('here');
+        await page.waitForFunction( () => document.querySelectorAll('a.block-header').length
+        );
+
+        await page.waitForFunction( () => document.querySelectorAll('button[class="contactIcon"] > img').length
+        );
+
         const productsGrid = await page.evaluate(() => {
             const productListDom = document.querySelectorAll(".uk-card-body"); // getting all product divs 
            
@@ -37,7 +41,7 @@ const webscraping = async pageUrl => {
             productListDom.forEach(element => {
 
                 const title = element.querySelector(".title").innerText; // getting Title of product
-                let linkUrl = element.querySelector(".block-header").getAttribute('href'); // getting community link url
+                let linkUrl = element.querySelector("a").getAttribute('href'); // getting community link url
                 
                 if(linkUrl && !linkUrl.startsWith("https")) {
                     linkUrl = 'https://www.microfocus.com/' + linkUrl; // adds microfocus url for relative paths
@@ -89,6 +93,8 @@ const webscraping = async pageUrl => {
                 productObj.push(itemObj);
                 
             });
+
+            console.log(productListDom);
 
             return productObj;
         });
